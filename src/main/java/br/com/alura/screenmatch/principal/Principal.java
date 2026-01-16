@@ -81,18 +81,18 @@ public class Principal {
         episodios.forEach(System.out::println);
 
 
-        System.out.println("Digite um trecho do titulo do episódio: ");
-        var trechoTitulo = scanner.nextLine();
-
-        Optional<Episodio> episodioBuscado = episodios.stream()
-                .filter(e -> e.getTitulo().toUpperCase().contains(trechoTitulo.toUpperCase()))
-                .findFirst();
-        if(episodioBuscado.isPresent()){
-            System.out.println("Episódio encontrado!");
-            System.out.println("Temporada: " + episodioBuscado.get().getTemporada());
-        } else {
-            System.out.println("Episódio não encontrado!");
-        }
+//        System.out.println("Digite um trecho do titulo do episódio: ");
+//        var trechoTitulo = scanner.nextLine();
+//
+//        Optional<Episodio> episodioBuscado = episodios.stream()
+//                .filter(e -> e.getTitulo().toUpperCase().contains(trechoTitulo.toUpperCase()))
+//                .findFirst();
+//        if(episodioBuscado.isPresent()){
+//            System.out.println("Episódio encontrado!");
+//            System.out.println("Temporada: " + episodioBuscado.get().getTemporada());
+//        } else {
+//            System.out.println("Episódio não encontrado!");
+//        }
 //
 //        System.out.println("A partir de qual ano você deseja ver os episódios? ");
 //        var ano = scanner.nextInt();
@@ -106,6 +106,12 @@ public class Principal {
 //                .filter(e -> e.getDataLancamento() != null && e.getDataLancamento().isAfter(dataBusca))
 //                .forEach(e -> System.out.println("Temporada :" + e.getTemporada() + " Episódio: " + e.getTitulo() + " Data lançamento" + e.getDataLancamento().format(formatador)));
 //
+
+        Map<Integer, Double> avaliacoesPorTemporada = episodios.stream()
+                .filter(e -> e.getAvaliacao() > 0.0)
+                .collect(Collectors.groupingBy(Episodio::getTemporada, Collectors.averagingDouble(Episodio::getAvaliacao)));
+        System.out.println(avaliacoesPorTemporada);
+
 
 
     }
