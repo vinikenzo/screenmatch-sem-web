@@ -20,6 +20,8 @@ public class Principal {
 
     private List<Serie> series = new ArrayList<>();
 
+    private Optional<Serie> serieBusca;
+
     public Principal(SerieRepository repositorio) {
         this.repositorio = repositorio;
     }
@@ -37,6 +39,7 @@ public class Principal {
                     7 - Buscar séries por categoria
                     8 - Filtrar séries
                     9 - Buscar episódio por trecho
+                    10 - Top 5 episódios
                     
                     0 - Sair                                 
                     """;
@@ -73,6 +76,9 @@ public class Principal {
                 case 9:
                     buscarEpisodioPorTrecho();
                     break;
+                case 10:
+                    topEpisodiosPorSerie();
+                    break;
                 case 0:
                     System.out.println("Saindo...");
                     break;
@@ -80,6 +86,17 @@ public class Principal {
                     System.out.println("Opção inválida");
             }
         }
+    }
+
+    private void topEpisodiosPorSerie() {
+        buscarSeriePorTitulo();
+        if(serieBusca.isPresent()){
+            Serie serie = serieBusca.get();
+            List<Episodio> topEpisodios = repositorio.topEpisodiosPorSerie(serie);
+            topEpisodios.forEach(e -> System.out.printf("Série: %s Temporada %s - Episódio %s - Avaliação %s - %s\n",
+                    e.getSerie().getTitulo(), e.getTemporada(), e.getNumero(), e.getAvaliacao(), e.getTitulo()));
+        }
+
     }
 
     private void buscarEpisodioPorTrecho() {
@@ -131,10 +148,10 @@ public class Principal {
     private void buscarSeriePorTitulo() {
         System.out.println("Escolha uma série pelo nome: ");
         var nomeSerie = leitura.nextLine();
-        Optional<Serie> serieBuscada = repositorio.findByTituloContainingIgnoreCase(nomeSerie);
+        serieBusca = repositorio.findByTituloContainingIgnoreCase(nomeSerie);
 
-        if(serieBuscada.isPresent()){
-            System.out.println("Dados da série: " + serieBuscada.get());
+        if(serieBusca.isPresent()){
+            System.out.println("Dados da série: " + serieBusca.get());
         } else {
             System.out.println("Série não encontrada");
         }
